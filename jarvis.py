@@ -199,7 +199,7 @@ if __name__ == "__main__":
 
                 mail.starttls()
 
-                mail.login('siddhant.zaveri@sakec.ac.in', 'innova5639')
+                mail.login('siddhant.zaveri@sakec.ac.in', 'enter your password')
 
                 mail.sendmail('sid', 'zaverisid934@gmail.com', content)
 
