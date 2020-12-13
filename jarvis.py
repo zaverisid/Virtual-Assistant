@@ -1,6 +1,7 @@
 import pyttsx3
 import speech_recognition as sr
 import datetime
+import time
 import wikipedia
 import wolframalpha
 import webbrowser
@@ -12,6 +13,7 @@ import cv2
 import tkinter as tk
 import pywhatkit
 import pyjokes
+import pyautogui
 from requests import get
 
 MASTER = 'Sid'
@@ -114,6 +116,10 @@ if __name__ == "__main__":
             chrome_path = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s'
             webbrowser.get(chrome_path).open(url)
 
+        # elif 'open notepad' in query:
+        #     npath = "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Accessories\\notepad.exe"
+        #     os.startfile(npath)
+
         elif 'open command prompt' in query:
             os.system('start cmd')
             
@@ -134,7 +140,13 @@ if __name__ == "__main__":
             speak(f"your IP Address is {ip}")
 
         elif 'send message' in query:
-            pywhatkit.sendwhatmsg('+919833398555', 'i love you', 14, 12)
+            pywhatkit.sendwhatmsg('your number', 'your message', 14, 12)
+
+        elif 'switch the window' in query:
+            pyautogui.keyDown("alt")
+            pyautogui.press("tab")
+            time.sleep(1)
+            pyautogui.keyUp("alt")
 
             
 
