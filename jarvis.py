@@ -8,9 +8,11 @@ import os
 import sys
 import random
 import smtplib
+import cv2
 import tkinter as tk
 import pywhatkit
 import pyjokes
+from requests import get
 
 MASTER = 'Sid'
 
@@ -88,6 +90,9 @@ if __name__ == "__main__":
             url = "google.com"
             chrome_path = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s'
             webbrowser.get(chrome_path).open(url)
+            speak("Sir, what should i search on google?")
+            cm = takeCommand().lower()
+            webbrowser.open(f"you searched {cm}")
 
         elif 'open instagram' in query:
             url = "instagram.com"
@@ -109,6 +114,30 @@ if __name__ == "__main__":
             chrome_path = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s'
             webbrowser.get(chrome_path).open(url)
 
+        elif 'open command prompt' in query:
+            os.system('start cmd')
+            
+        elif 'open camera' in query:
+            speak("Press Q to exit")
+            cap = cv2.VideoCapture(0)
+            while True:
+                ret, img = cap.read()
+                cv2.imshow('webcam', img)
+                if cv2.waitKey(10) == ord('q'):
+                    break
+            cap.release()
+            cv2.destroyAllWindows()
+            
+
+        elif 'ip address' in query:
+            ip = get('https://api.ipify.org').text
+            speak(f"your IP Address is {ip}")
+
+        elif 'send message' in query:
+            pywhatkit.sendwhatmsg('+919833398555', 'i love you', 14, 12)
+
+            
+
         elif 'play' in query:
             song = query.replace('play', '')
             speak('playing' + song)
@@ -120,11 +149,11 @@ if __name__ == "__main__":
         #     print(songs)
         #     os.startfile(os.path.join(music_dir, songs[0]))
 
-        elif 'play perfect' in query:
-            music_dir = 'C:\\Users\\siddhant\\Downloads\\music'
-            songs = os.listdir(music_dir)
-            print(songs)
-            os.startfile(os.path.join(music_dir, songs[1]))
+        # elif 'play perfect' in query:
+        #     music_dir = 'C:\\Users\\siddhant\\Downloads\\music'
+        #     songs = os.listdir(music_dir)
+        #     print(songs)
+        #     os.startfile(os.path.join(music_dir, songs[1]))
 
         elif 'the time' in query:
             strTime = datetime.datetime.now().strftime("%H:%M:%S")
