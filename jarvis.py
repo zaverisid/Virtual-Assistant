@@ -14,6 +14,7 @@ import tkinter as tk
 import pywhatkit
 import pyjokes
 import pyautogui
+import requests
 from requests import get
 
 MASTER = 'Sid'
@@ -45,14 +46,13 @@ def wishMe():
     speak("How may i help You?")
 
 
-
 def takeCommand():
     # it takes microphone input from the user and returns string output
 
     r = sr.Recognizer()
     with sr.Microphone() as source:
         print("Listening...")
-        r.pause_threshold = 2 #press ctrl on pause threshhold to increse decrese sensitivity 
+        r.pause_threshold = 2  # press ctrl on pause threshhold to increse decrese sensitivity
         audio = r.listen(source)
 
         try:
@@ -67,6 +67,20 @@ def takeCommand():
             return "None"
 
         return query
+
+
+def news():
+    main_url = 'http://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey=052dbc66de9c4123848e8603392016cf'
+
+    main_page = requests.get(main_url).json()
+    articles = main_page["articles"]
+    head = []
+    day = ["first", "second", "third", "fourth", "fifth"]
+    for ar in articles:
+        head.append(ar["title"])
+    for i in range(len(day)):
+        print(f"today's {day[i]} news is: {head[i]}")
+        speak(f"today's {day[i]} news is: {head[i]}")
 
 
 if __name__ == "__main__":
@@ -116,13 +130,25 @@ if __name__ == "__main__":
             chrome_path = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s'
             webbrowser.get(chrome_path).open(url)
 
-        # elif 'open notepad' in query:
-        #     npath = "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Accessories\\notepad.exe"
-        #     os.startfile(npath)
+        elif 'news' in query:
+            speak("Please wait sir, Fetching the latest news")
+            news()
 
         elif 'open command prompt' in query:
             os.system('start cmd')
-            
+
+        elif 'close command prompt' in query:
+            speak("ok sir, Closing command prompt")
+            os.system("taskkill /f /im cmd.exe")
+
+        elif 'shutdown the system' in query:
+            speak("ok sir, Shutting down")
+            os.system("shutdown /s /t 5")
+
+        elif 'sleep off' in query:
+            speak("ok sir, Sleeping")
+            os.system("rundll32.exe powrprof.dll,SetSuspendState 0,1,0")
+
         elif 'open camera' in query:
             speak("Press Q to exit")
             cap = cv2.VideoCapture(0)
@@ -133,7 +159,6 @@ if __name__ == "__main__":
                     break
             cap.release()
             cv2.destroyAllWindows()
-            
 
         elif 'ip address' in query:
             ip = get('https://api.ipify.org').text
@@ -148,24 +173,10 @@ if __name__ == "__main__":
             time.sleep(1)
             pyautogui.keyUp("alt")
 
-            
-
         elif 'play' in query:
             song = query.replace('play', '')
             speak('playing' + song)
             pywhatkit.playonyt(song)
-
-              # elif 'play music' in query:
-        #     music_dir = 'C:\\Users\\siddhant\\Downloads\\music'
-        #     songs = os.listdir(music_dir)
-        #     print(songs)
-        #     os.startfile(os.path.join(music_dir, songs[0]))
-
-        # elif 'play perfect' in query:
-        #     music_dir = 'C:\\Users\\siddhant\\Downloads\\music'
-        #     songs = os.listdir(music_dir)
-        #     print(songs)
-        #     os.startfile(os.path.join(music_dir, songs[1]))
 
         elif 'the time' in query:
             strTime = datetime.datetime.now().strftime("%H:%M:%S")
@@ -186,6 +197,39 @@ if __name__ == "__main__":
         elif 'Whats up?' in query:
             wu = "Just doing my thing sir!"
             speak(wu)
+
+        elif 'instagram profile' in query or 'profile on instagram' in query:
+            speak("Sir please enter the username correctly")
+            name = input("Enter username here = ")
+            webbrowser.open(f"www.instagram.com/{name}")
+            speak(f"here is the profile of the user {name}")
+            time.sleep(5)
+
+        elif 'take screenshot' in query or 'take a screenshot' in query or 'screenshot' in query:
+            speak("Sir, please tell me the name for this screenshot file")
+            name = takeCommand().lower()
+            speak("Sir, please hold the screen for a few seconds, i am taking the screenshot")
+            time.sleep(3)
+            img = pyautogui.screenshot()
+            img.save(f"{name}.png")
+            speak("The screenshot has been taken and saved in our main folder")
+
+
+        elif 'where am i' in query or 'where are we' in query:
+            speak("Wait sir, Let me check")
+            try:
+                ipAdd = requests.get('https://api.ipify.org').text
+                print(ipAdd)
+                url = 'https://get.geojs.io/v1/ip/geo/'+ipAdd+'.json'
+                geo_requests = requests.get(url)
+                geo_data = geo_requests.json()
+                city= geo_data['city']
+                country= geo_data['country']
+                speak(f"sir, i am not sure but we are in {city} city of {country}")
+            except Exception as e:
+                speak("Sorry sir, I cannot fetch the information at this moment")
+                pass
+
 
         elif 'bye' in query:
             stop = "Hope u enjoyed my services. Goodbye!"
@@ -208,7 +252,7 @@ if __name__ == "__main__":
                 mail.starttls()
 
                 mail.login('siddhant.zaveri@sakec.ac.in',
-                           'enter your password')
+                           'your password')
 
                 mail.sendmail('sid', 'zaverisid934@gmail.com', content)
 
@@ -219,6 +263,61 @@ if __name__ == "__main__":
     # except:
     #     e = "I am not able to send the email right now"
     #     speak(e)
+        # elif 'email to me' in query:
+        #     speak("Sir,what should i say?")
+        #     query=takeCommand().lower()
+        #     if "send a file " in query:
+        #         email = 'siddhant.zaveri@sakec.ac.in'
+        #         password = 'innova5639'
+        #         send_to_email = 'zaverisid934@gmail.com'
+        #         speak("Ok sir, what is the subject of this email?")
+        #         query=takeCommand().lower()
+        #         subject = query
+        #         speak("And what is the message for this email?")
+        #         query2 = takeCommand().lower()
+        #         message = query2
+        #         speak("Sir, please enter the correct path of the file into the shell")
+        #         file_location = input("please enter the path here: ")
+
+        #         speak("Please wait I am sending the email now...")
+
+        #         msg = MIMEMultipart()
+        #         msg['From'] = email
+        #         msg['To'] = send_to_email
+        #         msg['Subject'] = subject
+
+        #         msg.attach(MIMEText(message, 'plain'))
+
+        #         filename = os.path.basename(file_location)
+        #         attachment = open(file_location,"rb")
+        #         part = MIMEBase('application', 'octet-stream')
+        #         part.set_payload(attachment.read())
+        #         encoders.encode_base64(part)
+        #         part.add_header('Content-Disposition', "attachment; filename= %s" % filename)
+
+        #         msg.attach(part)
+
+        #         server.smtplib.SMTP('smtp.gmail.com', 587)
+        #         server.ehlo()
+        #         server.starttls()
+        #         server.login('siddhant.zaveri@sakec.ac.in','innova5639')
+        #         text=msg.as_string()
+        #         server.sendmail(email,send_to_email,text)
+        #         server.quit()
+        #         speak("email has been sent")
+
+        #     else:
+        #         email = 'siddhant.zaveri@sakec.ac.in'
+        #         password = 'innova5639'
+        #         send_to_email = 'zaverisid934@gmail.com'
+        #         message=query
+
+        #         server.smtplib.SMTP('smtp.gmail.com', 587)
+        #         server.starttls()
+        #         server.login('siddhant.zaveri@sakec.ac.in','innova5639')
+        #         server.sendmail(email,send_to_email,text)
+        #         server.quit()
+        #         speak("email has been sent")
 
         else:
             query = query
