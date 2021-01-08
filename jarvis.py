@@ -15,13 +15,15 @@ import pywhatkit
 import pyjokes
 import pyautogui
 import requests
+import subprocess
+import PyPDF2
 from requests import get
 
 MASTER = 'Sid'
 
 engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
-engine.setProperty('voice', voices[0].id)
+engine.setProperty('voice', voices[1].id)
 
 client = wolframalpha.Client('K6Y537-G9KHELRWVH')
 
@@ -32,7 +34,7 @@ def speak(audio):
 
 
 def wishMe():
-    speak("Hello, This is Jarvis. I am your virtual assistant")
+    speak("Hello, This is Karen")
     hour = int(datetime.datetime.now().hour)
     if hour >= 0 and hour < 12:
         speak("Good morning!" + MASTER)
@@ -81,6 +83,19 @@ def news():
     for i in range(len(day)):
         print(f"today's {day[i]} news is: {head[i]}")
         speak(f"today's {day[i]} news is: {head[i]}")
+
+def pdf_reader():
+    book = open('paper.pdf', 'rb')
+    pdfReader = PyPDF2.PdfFileReader(book)
+    pages = pdfReader.numPages
+    speak(f"Total number of pages in this book are {pages}")
+    speak("Sir please enter the page number i have to read")
+    pg = int(input("Please enter the page number: "))
+    page = pdfReader.getPage(pg)
+    text = page.extractText()
+    speak(text)
+
+
 
 
 if __name__ == "__main__":
@@ -136,6 +151,9 @@ if __name__ == "__main__":
 
         elif 'open command prompt' in query:
             os.system('start cmd')
+
+        # elif 'open notepad' in query:
+        #     subprocess.Popen('C:\\ProgramData\Microsoft\\Windows\\Start Menu\\Programs\\Accessories\\notepad.exe')
 
         elif 'close command prompt' in query:
             speak("ok sir, Closing command prompt")
@@ -214,6 +232,9 @@ if __name__ == "__main__":
             img.save(f"{name}.png")
             speak("The screenshot has been taken and saved in our main folder")
 
+        elif 'read pdf' in query or 'read a pdf' in query or 'pdf' in query:
+            pdf_reader()
+
 
         elif 'where am i' in query or 'where are we' in query:
             speak("Wait sir, Let me check")
@@ -231,7 +252,7 @@ if __name__ == "__main__":
                 pass
 
 
-        elif 'bye' in query:
+        elif 'bye' in query or 'goodbye' in query:
             stop = "Hope u enjoyed my services. Goodbye!"
             speak(stop)
             exit()
