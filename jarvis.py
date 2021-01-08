@@ -152,9 +152,6 @@ if __name__ == "__main__":
         elif 'open command prompt' in query:
             os.system('start cmd')
 
-        # elif 'open notepad' in query:
-        #     subprocess.Popen('C:\\ProgramData\Microsoft\\Windows\\Start Menu\\Programs\\Accessories\\notepad.exe')
-
         elif 'close command prompt' in query:
             speak("ok sir, Closing command prompt")
             os.system("taskkill /f /im cmd.exe")
@@ -204,7 +201,7 @@ if __name__ == "__main__":
             codePath = "C:\\Users\\siddhant\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
             os.startfile(codePath)
 
-        elif 'thank you' in query:
+        elif 'thank you' in query or 'thanks' in query:
             greet = "Always a pleasure to serve you sir!. Anything else?"
             speak(greet)
             # exit()
