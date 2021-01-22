@@ -23,7 +23,7 @@ MASTER = 'Sid'
 
 engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
-engine.setProperty('voice', voices[1].id)
+engine.setProperty('voice', voices[0].id)
 
 client = wolframalpha.Client('K6Y537-G9KHELRWVH')
 
@@ -34,7 +34,7 @@ def speak(audio):
 
 
 def wishMe():
-    speak("Hello, This is Karen")
+    speak("Hello, This is Jarvis")
     hour = int(datetime.datetime.now().hour)
     if hour >= 0 and hour < 12:
         speak("Good morning!" + MASTER)
@@ -228,6 +228,20 @@ if __name__ == "__main__":
             img = pyautogui.screenshot()
             img.save(f"{name}.png")
             speak("The screenshot has been taken and saved in our main folder")
+
+        elif 'hide all files' in query or 'hide this folder' in query or 'visible for everyone' in query:
+            speak("Sir, please tell me whether you want to hide this folder or make it visible for everyone")
+            condition = takeCommand().lower()
+            if 'hide' in condition:
+                os.system("attrib +h /s /d")
+                speak("Sir all your files are now hidden")
+
+            elif 'visible' in condition:
+                os.system("attrib -h /s /d")
+                speak("Sir, all your files are now visible to everyone.")
+
+            elif 'leave it' in condition or 'leave for now' in condition:
+                speak("ok sir!")
 
         elif 'read pdf' in query or 'read a pdf' in query or 'pdf' in query:
             pdf_reader()
