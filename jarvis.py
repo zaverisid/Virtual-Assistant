@@ -8,7 +8,9 @@ import webbrowser
 import os
 import sys
 import random
+import math
 import smtplib
+import operator
 import cv2
 import tkinter as tk
 import pywhatkit
@@ -17,6 +19,13 @@ import pyautogui
 import requests
 import subprocess
 import PyPDF2
+# from PyQt5 import QtWidgets, QtCore, QtGui
+# from PyQt5.QtCore import QTimer, QTime, QDate, Qt 
+# from PyQt5.QtGui import QMovie
+# from PyQt5.QtCore import *
+# from PyQt5.QtGui import *
+# from PyQt5.QtWidgets import *
+# from PyQt5.uic import loadUiType
 from requests import get
 
 MASTER = 'Sid'
@@ -261,6 +270,29 @@ if __name__ == "__main__":
             except Exception as e:
                 speak("Sorry sir, I cannot fetch the information at this moment")
                 pass
+
+        elif 'do some calculation' in query or 'can u calculate' in query or 'calculate' in query or 'calculation' in query:
+            r = sr.Recognizer()
+            with sr.Microphone() as source:
+                speak("Sir, what do you want me to calculate, example: 3 plus 3")
+                print("listening....")
+                r.adjust_for_ambient_noise(source)
+                audio = r.listen(source)
+            my_string=r.recognize_google(audio)
+            print(my_string)
+            def get_operator_fn(op):
+                return{
+                    '+' : operator.add,
+                    '-' : operator.sub,
+                    'X' : operator.mul,
+                    'divided by' : operator.__truediv__,
+                }[op]
+            def eval_binary_expr(op1, oper, op2):
+                op1,op2 = int(op1), int(op2)
+                return get_operator_fn(oper)(op1, op2)
+            speak("your result is")
+            print(eval_binary_expr(*(my_string.split())))
+            speak(eval_binary_expr(*(my_string.split())))
 
 
         elif 'bye' in query or 'goodbye' in query:
