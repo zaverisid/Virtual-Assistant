@@ -19,6 +19,7 @@ import pyautogui
 import requests
 import subprocess
 import PyPDF2
+import psutil
 # from PyQt5 import QtWidgets, QtCore, QtGui
 # from PyQt5.QtCore import QTimer, QTime, QDate, Qt 
 # from PyQt5.QtGui import QMovie
@@ -104,6 +105,14 @@ def pdf_reader():
     text = page.extractText()
     speak(text)
 
+def cpu():
+    cpu = str(psutil.cpu_percent())
+    print(cpu)
+    speak(f"You have used {cpu} of cpu")
+    battery = psutil.sensors_battery().percent 
+    print(battery)
+    speak(f"You have used {battery} of battery") 
+
 
 
 
@@ -172,6 +181,21 @@ if __name__ == "__main__":
         elif 'sleep off' in query:
             speak("ok sir, Sleeping")
             os.system("rundll32.exe powrprof.dll,SetSuspendState 0,1,0")
+
+        elif 'battery' in query or 'cpu' in query:
+            cpu() 
+
+        elif 'take a note' in query or 'write' in query or 'note' in query:
+            speak("What should i write sir?")
+            note = takeCommand()
+            remember = open("data.txt", 'w')
+            remember.write(note)
+            remember.close()
+            speak("I have noted that" + note)
+
+        elif 'do you have any data' in query or 'what do you have':
+            remember = open('data.txt', 'r').read()
+            speak("You told me to remember that" + remember)
 
         elif 'open camera' in query:
             speak("Press Q to exit")
