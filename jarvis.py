@@ -20,6 +20,7 @@ import requests
 import subprocess
 import PyPDF2
 import psutil
+from bs4 import BeautifulSoup
 # from PyQt5 import QtWidgets, QtCore, QtGui
 # from PyQt5.QtCore import QTimer, QTime, QDate, Qt 
 # from PyQt5.QtGui import QMovie
@@ -193,9 +194,10 @@ if __name__ == "__main__":
             remember.close()
             speak("I have noted that" + note)
 
-        elif 'do you have any data' in query or 'what do you have':
+        elif 'any reminders' in query or 'reminder' in query:
             remember = open('data.txt', 'r').read()
             speak("You told me to remember that" + remember)
+
 
         elif 'open camera' in query:
             speak("Press Q to exit")
@@ -318,11 +320,20 @@ if __name__ == "__main__":
             print(eval_binary_expr(*(my_string.split())))
             speak(eval_binary_expr(*(my_string.split())))
 
+        elif 'temperature' in query:
+            search = "temperature in mumbai"
+            url = f"https://www.google.com/search?q={search}"
+            r = requests.get(url)
+            data = BeautifulSoup(r.text, "html.parser")
+            temp = data.find("div", class_="BNeawe").text
+            speak(f"current {search} is {temp}")
+
 
         elif 'bye' in query or 'goodbye' in query:
             stop = "Hope u enjoyed my services. Goodbye!"
             speak(stop)
             exit()
+
 
         elif 'email' in query:
             speak('Who is the recipient')
