@@ -20,6 +20,7 @@ import requests
 import subprocess
 import PyPDF2
 import psutil
+from pywikihow import exceptions, search_wikihow
 from bs4 import BeautifulSoup
 # from PyQt5 import QtWidgets, QtCore, QtGui
 # from PyQt5.QtCore import QTimer, QTime, QDate, Qt 
@@ -281,6 +282,25 @@ if __name__ == "__main__":
         elif 'read pdf' in query or 'read a pdf' in query or 'pdf' in query:
             pdf_reader()
 
+        elif 'activate how to do mode' in query:
+            speak("How to do mode is now activated")
+            while True:
+                speak("Please tell me what do you want to know")
+                how = takeCommand()
+                try:
+                    if "exit" in how or "close" in how:
+                        speak("okay sir, how to do mode is now deactivated")
+                        break
+                    else:
+                        max_results = 1
+                        how_to = search_wikihow(how, max_results)
+                        assert len(how_to) == 1
+                        how_to[0].print()
+                        speak(how_to[0].summary)
+                except Exception as e:
+                    speak("Sorry sir i am not able to find this at this moment")
+            
+
 
         elif 'where am i' in query or 'where are we' in query:
             speak("Wait sir, Let me check")
@@ -407,7 +427,7 @@ if __name__ == "__main__":
 
         #     else:
         #         email = 'siddhant.zaveri@sakec.ac.in'
-        #         password = 'innova5639'
+        #         password = 'your password'
         #         send_to_email = 'zaverisid934@gmail.com'
         #         message=query
 
