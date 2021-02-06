@@ -36,6 +36,7 @@ MASTER = 'Sid'
 engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
 engine.setProperty('voice', voices[0].id)
+# engine.setProperty('rate', 180)
 
 client = wolframalpha.Client('K6Y537-G9KHELRWVH')
 
@@ -111,9 +112,19 @@ def cpu():
     cpu = str(psutil.cpu_percent())
     print(cpu)
     speak(f"You have used {cpu} of cpu")
+
+def battery():
     battery = psutil.sensors_battery().percent 
     print(battery)
-    speak(f"You have used {battery} of battery") 
+    speak(f"We have {battery} percent of battery left") 
+    if battery >= 75:
+        speak("Sir, We have enough battery to continue with our work")
+    elif battery >=40 and battery < 75:
+        speak("Sir, we have a considerable amont of battery to continue working")
+    elif battery >=15 and battery < 40:
+        speak("Sir, we might not have sufficient power to work. Please connect your charger")
+    elif battery < 15:
+        speak("Sir, the system will shut down soon. Kindly connect the charger immidiately")
 
 
 
@@ -184,8 +195,11 @@ if __name__ == "__main__":
             speak("ok sir, Sleeping")
             os.system("rundll32.exe powrprof.dll,SetSuspendState 0,1,0")
 
-        elif 'battery' in query or 'cpu' in query:
-            cpu() 
+        elif 'battery' in query:
+            battery()
+
+        elif 'cpu' in query:
+            cpu()
 
         elif 'take a note' in query or 'write' in query or 'note' in query:
             speak("What should i write sir?")
@@ -438,26 +452,26 @@ if __name__ == "__main__":
         #         server.quit()
         #         speak("email has been sent")
 
-        else:
-            query = query
-            speak('Searching...')
-            try:
-                try:
-                    speak('Just a minute sir.... ')
-                    res = client.query(query)
-                    results = next(res.results).text
-                    speak('Got it!')
-                    print(results)
-                    speak(results)
+        # else:
+        #     query = query
+        #     speak('Searching...')
+        #     try:
+        #         try:
+        #             speak('Just a minute sir.... ')
+        #             res = client.query(query)
+        #             results = next(res.results).text
+        #             speak('Got it!')
+        #             print(results)
+        #             speak(results)
 
-                except:
-                    results = wikipedia.summary(query, sentences=2)
-                    speak('Just a minute sir...')
-                    speak('Got It!')
-                    print(results)
-                    speak(results)
+        #         except:
+        #             results = wikipedia.summary(query, sentences=2)
+        #             speak('Just a minute sir...')
+        #             speak('Got It!')
+        #             print(results)
+        #             speak(results)
 
-            except:
-                url = "google.com"
-                chrome_path = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s'
-                webbrowser.get(chrome_path).open(url)
+        #     except:
+        #         url = "google.com"
+        #         chrome_path = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s'
+        #         webbrowser.get(chrome_path).open(url)
