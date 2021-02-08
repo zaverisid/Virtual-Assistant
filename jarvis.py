@@ -18,6 +18,7 @@ import pyjokes
 import pyautogui
 import requests
 import subprocess
+import speedtest
 import PyPDF2
 import psutil
 from pywikihow import exceptions, search_wikihow
@@ -200,6 +201,17 @@ if __name__ == "__main__":
 
         elif 'cpu' in query:
             cpu()
+        
+        elif 'speed test' in query:
+            st = speedtest.Speedtest()
+            dl = speedtest.download()
+            up = speedtest.upload()
+            speak(f"Sir we have {dl} bit per second downloading speed and {up} bits per second uploading speed")
+            # try:
+            #     os.system('cmd /k "speedtest"')
+
+            # except:
+            #     speak("Sir, there is no internet connection")
 
         elif 'take a note' in query or 'write' in query or 'note' in query:
             speak("What should i write sir?")
@@ -452,26 +464,26 @@ if __name__ == "__main__":
         #         server.quit()
         #         speak("email has been sent")
 
-        # else:
-        #     query = query
-        #     speak('Searching...')
-        #     try:
-        #         try:
-        #             speak('Just a minute sir.... ')
-        #             res = client.query(query)
-        #             results = next(res.results).text
-        #             speak('Got it!')
-        #             print(results)
-        #             speak(results)
+        else:
+            query = query
+            speak('Searching...')
+            try:
+                try:
+                    speak('Just a minute sir.... ')
+                    res = client.query(query)
+                    results = next(res.results).text
+                    speak('Got it!')
+                    print(results)
+                    speak(results)
 
-        #         except:
-        #             results = wikipedia.summary(query, sentences=2)
-        #             speak('Just a minute sir...')
-        #             speak('Got It!')
-        #             print(results)
-        #             speak(results)
+                except:
+                    results = wikipedia.summary(query, sentences=2)
+                    speak('Just a minute sir...')
+                    speak('Got It!')
+                    print(results)
+                    speak(results)
 
-        #     except:
-        #         url = "google.com"
-        #         chrome_path = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s'
-        #         webbrowser.get(chrome_path).open(url)
+            except:
+                url = "google.com"
+                chrome_path = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s'
+                webbrowser.get(chrome_path).open(url)
