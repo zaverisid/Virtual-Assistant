@@ -241,8 +241,8 @@ if __name__ == "__main__":
             ip = get('https://api.ipify.org').text
             speak(f"your IP Address is {ip}")
 
-        elif 'send message' in query:
-            pywhatkit.sendwhatmsg('your number', 'your message', 14, 12)
+        elif 'send message' in query or 'send a message' in query:
+            pywhatkit.sendwhatmsg('number with countrycode', 'Content of the message', 23, 55)
 
         elif 'switch the window' in query:
             pyautogui.keyDown("alt")
