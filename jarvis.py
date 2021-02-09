@@ -18,6 +18,7 @@ import pyjokes
 import pyautogui
 import requests
 import subprocess
+import randfacts
 import speedtest
 import PyPDF2
 import psutil
@@ -201,6 +202,11 @@ if __name__ == "__main__":
 
         elif 'cpu' in query:
             cpu()
+
+        elif 'fact' in query or 'facts' in query:
+            x = randfacts.getFact()
+            print(x)
+            speak("Did you know that, " +x)
         
         elif 'speed test' in query:
             st = speedtest.Speedtest()
