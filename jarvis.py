@@ -12,15 +12,18 @@ import math
 import smtplib
 import operator
 import cv2
+import wmi
 import tkinter as tk
 import pywhatkit
 import pyjokes
 import pyautogui
 import requests
+import numpy as np
 import subprocess
 import randfacts
 import speedtest
 import PyPDF2
+import pytube 
 import psutil
 from pywikihow import exceptions, search_wikihow
 from bs4 import BeautifulSoup
@@ -244,9 +247,46 @@ if __name__ == "__main__":
             cap.release()
             cv2.destroyAllWindows()
 
+        elif 'record my screen' in query:
+            speak("Okay sir, starting with screen recording")
+            speak("Press Q to stop recording")
+            resolution = (1920, 1080)
+            codec = cv2.VideoWriter_fourcc(*"XVID")
+            filename = "Recording.avi"
+            fps = 60.0
+            out = cv2.VideoWriter(filename, codec, fps, resolution)
+            cv2.namedWindow("Live", cv2.WINDOW_NORMAL)
+            cv2.resizeWindow("Live", 480, 270)
+            while True:
+                img = pyautogui.screenshot()
+                frame = np.array(img)
+                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                out.write(frame)
+                cv2.imshow('Live', frame)
+                if cv2.waitKey(1) == ord('q'):
+                    break
+            out.release()
+            cv2.destroyAllWindows()
+
         elif 'ip address' in query:
             ip = get('https://api.ipify.org').text
             speak(f"your IP Address is {ip}")
+
+        elif 'system information' in query:
+            c=wmi.WMI()
+            my_system = c.Win32_ComputerSystem()[0]
+            print(f"Manufacturer: {my_system.Manufacturer}")
+            speak(f"Manufacturer: {my_system.Manufacturer}")
+            print(f"Model: {my_system.Model}")
+            speak(f"Model: {my_system.Model}")
+            print(f"Name: {my_system.Name}")
+            speak(f"Name: {my_system.Name}")
+            print(f"Number of Processors: {my_system.NumberOfProcessors}")
+            speak(f"Number of Processors: {my_system.NumberOfProcessors}")
+            print(f"SystemType: {my_system.SystemType}")
+            speak(f"SystemType: {my_system.SystemType}")
+            print(f"SystemFamily: {my_system.SystemFamily}")
+            speak(f"SystemFamily: {my_system.SystemFamily}")
 
         elif 'send message' in query or 'send a message' in query:
             pywhatkit.sendwhatmsg('number with countrycode', 'Content of the message', 23, 55)
@@ -380,6 +420,14 @@ if __name__ == "__main__":
             data = BeautifulSoup(r.text, "html.parser")
             temp = data.find("div", class_="BNeawe").text
             speak(f"current {search} is {temp}")
+
+        elif 'download video' in query:
+            speak("Sir please enter the link of the video that you want to download")
+            link = input("Paste the link here: ")
+            yt = pytube.YouTube(link)
+            stream = yt.streams.first()
+            stream.download()
+            speak("Your video has been successfully downloaded inside the folder")
 
 
         elif 'bye' in query or 'goodbye' in query:
