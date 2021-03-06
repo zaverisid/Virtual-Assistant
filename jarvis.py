@@ -11,6 +11,7 @@ import random
 import math
 import smtplib
 import operator
+from twilio.rest import Client
 import cv2
 import wmi
 import tkinter as tk
@@ -290,6 +291,26 @@ if __name__ == "__main__":
 
         elif 'send message' in query or 'send a message' in query:
             pywhatkit.sendwhatmsg('number with countrycode', 'Content of the message', 23, 55)
+
+        elif 'send text message' in query:
+            speak("Sir, What should i say?")
+            msz = takeCommand()
+
+            account_sid = 'AC577bb2308196bbb72d207be0d6e6c053'
+            auth_token = '095623c7cd5b15cae116e6866e8331ab'
+            client = Client(account_sid, auth_token)
+
+            message = client.messages \
+                .create(
+                    body = msz,
+                    from_='+19165028175',
+                    to='+917678060767'
+                )
+
+            print(message.sid)
+            speak("The message has been sent successfully")
+
+
 
         elif 'switch the window' in query:
             pyautogui.keyDown("alt")
