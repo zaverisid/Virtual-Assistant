@@ -1,4 +1,5 @@
 import pyttsx3
+from requests.models import Response
 import speech_recognition as sr
 import datetime
 import time
@@ -24,12 +25,12 @@ import subprocess
 import randfacts
 import speedtest
 import PyPDF2
-import pytube 
+import pytube
 import psutil
 from pywikihow import exceptions, search_wikihow
 from bs4 import BeautifulSoup
 # from PyQt5 import QtWidgets, QtCore, QtGui
-# from PyQt5.QtCore import QTimer, QTime, QDate, Qt 
+# from PyQt5.QtCore import QTimer, QTime, QDate, Qt
 # from PyQt5.QtGui import QMovie
 # from PyQt5.QtCore import *
 # from PyQt5.QtGui import *
@@ -104,6 +105,7 @@ def news():
         print(f"today's {day[i]} news is: {head[i]}")
         speak(f"today's {day[i]} news is: {head[i]}")
 
+
 def pdf_reader():
     book = open('paper.pdf', 'rb')
     pdfReader = PyPDF2.PdfFileReader(book)
@@ -115,25 +117,26 @@ def pdf_reader():
     text = page.extractText()
     speak(text)
 
+
 def cpu():
     cpu = str(psutil.cpu_percent())
     print(cpu)
     speak(f"You have used {cpu} of cpu")
 
+
 def battery():
-    battery = psutil.sensors_battery().percent 
+    battery = psutil.sensors_battery().percent
     print(battery)
-    speak(f"We have {battery} percent of battery left") 
+    speak(f"We have {battery} percent of battery left")
     if battery >= 75:
         speak("Sir, We have enough battery to continue with our work")
-    elif battery >=40 and battery < 75:
+    elif battery >= 40 and battery < 75:
         speak("Sir, we have a considerable amont of battery to continue working")
-    elif battery >=15 and battery < 40:
-        speak("Sir, we might not have sufficient power to work. Please connect your charger")
+    elif battery >= 15 and battery < 40:
+        speak(
+            "Sir, we might not have sufficient power to work. Please connect your charger")
     elif battery < 15:
         speak("Sir, the system will shut down soon. Kindly connect the charger immidiately")
-
-
 
 
 if __name__ == "__main__":
@@ -211,13 +214,14 @@ if __name__ == "__main__":
         elif 'fact' in query or 'facts' in query:
             x = randfacts.getFact()
             print(x)
-            speak("Did you know that, " +x)
-        
+            speak("Did you know that, " + x)
+
         elif 'speed test' in query:
             st = speedtest.Speedtest()
             dl = speedtest.download()
             up = speedtest.upload()
-            speak(f"Sir we have {dl} bit per second downloading speed and {up} bits per second uploading speed")
+            speak(
+                f"Sir we have {dl} bit per second downloading speed and {up} bits per second uploading speed")
             # try:
             #     os.system('cmd /k "speedtest"')
 
@@ -235,7 +239,6 @@ if __name__ == "__main__":
         elif 'any reminders' in query or 'reminder' in query:
             remember = open('data.txt', 'r').read()
             speak("You told me to remember that" + remember)
-
 
         elif 'open camera' in query:
             speak("Press Q to exit")
@@ -274,7 +277,7 @@ if __name__ == "__main__":
             speak(f"your IP Address is {ip}")
 
         elif 'system information' in query:
-            c=wmi.WMI()
+            c = wmi.WMI()
             my_system = c.Win32_ComputerSystem()[0]
             print(f"Manufacturer: {my_system.Manufacturer}")
             speak(f"Manufacturer: {my_system.Manufacturer}")
@@ -290,7 +293,8 @@ if __name__ == "__main__":
             speak(f"SystemFamily: {my_system.SystemFamily}")
 
         elif 'send message' in query or 'send a message' in query:
-            pywhatkit.sendwhatmsg('number with countrycode', 'Content of the message', 23, 55)
+            pywhatkit.sendwhatmsg('number with countrycode',
+                                  'Content of the message', 23, 55)
 
         elif 'send text message' in query:
             speak("Sir, What should i say?")
@@ -302,7 +306,7 @@ if __name__ == "__main__":
 
             message = client.messages \
                 .create(
-                    body = msz,
+                    body=msz,
                     from_='+19165028175',
                     to='+917678060767'
                 )
@@ -310,13 +314,35 @@ if __name__ == "__main__":
             print(message.sid)
             speak("The message has been sent successfully")
 
+        elif 'call' in query:
+            speak("Okay sir, Making a call right now")
+            account_sid = 'AC577bb2308196bbb72d207be0d6e6c053'
+            auth_token = '095623c7cd5b15cae116e6866e8331ab'
+            
+            client = Client(account_sid, auth_token)
 
+            message = client.calls \
+                .create(
+                    twiml='<Response><Say>This is a testing call from Jarvis..</Say></Response>',
+                    from_='+19165028175',
+                    to='+917678060767'
+                )
+            print(message.sid)
 
         elif 'switch the window' in query:
             pyautogui.keyDown("alt")
             pyautogui.press("tab")
             time.sleep(1)
             pyautogui.keyUp("alt")
+
+        elif 'volume up' in query:
+            pyautogui.press("volumeup")
+
+        elif 'volume down' in query:
+            pyautogui.press("volumedown")
+
+        elif 'mute' in query:
+            pyautogui.press("volumemute") 
 
         elif 'play' in query:
             song = query.replace('play', '')
@@ -353,14 +379,16 @@ if __name__ == "__main__":
         elif 'take screenshot' in query or 'take a screenshot' in query or 'screenshot' in query:
             speak("Sir, please tell me the name for this screenshot file")
             name = takeCommand().lower()
-            speak("Sir, please hold the screen for a few seconds, i am taking the screenshot")
+            speak(
+                "Sir, please hold the screen for a few seconds, i am taking the screenshot")
             time.sleep(3)
             img = pyautogui.screenshot()
             img.save(f"{name}.png")
             speak("The screenshot has been taken and saved in our main folder")
 
         elif 'hide all files' in query or 'hide this folder' in query or 'visible for everyone' in query:
-            speak("Sir, please tell me whether you want to hide this folder or make it visible for everyone")
+            speak(
+                "Sir, please tell me whether you want to hide this folder or make it visible for everyone")
             condition = takeCommand().lower()
             if 'hide' in condition:
                 os.system("attrib +h /s /d")
@@ -393,8 +421,6 @@ if __name__ == "__main__":
                         speak(how_to[0].summary)
                 except Exception as e:
                     speak("Sorry sir i am not able to find this at this moment")
-            
-
 
         elif 'where am i' in query or 'where are we' in query:
             speak("Wait sir, Let me check")
@@ -404,9 +430,10 @@ if __name__ == "__main__":
                 url = 'https://get.geojs.io/v1/ip/geo/'+ipAdd+'.json'
                 geo_requests = requests.get(url)
                 geo_data = geo_requests.json()
-                city= geo_data['city']
-                country= geo_data['country']
-                speak(f"sir, i am not sure but we are in {city} city of {country}")
+                city = geo_data['city']
+                country = geo_data['country']
+                speak(
+                    f"sir, i am not sure but we are in {city} city of {country}")
             except Exception as e:
                 speak("Sorry sir, I cannot fetch the information at this moment")
                 pass
@@ -418,17 +445,19 @@ if __name__ == "__main__":
                 print("listening....")
                 r.adjust_for_ambient_noise(source)
                 audio = r.listen(source)
-            my_string=r.recognize_google(audio)
+            my_string = r.recognize_google(audio)
             print(my_string)
+
             def get_operator_fn(op):
                 return{
-                    '+' : operator.add,
-                    '-' : operator.sub,
-                    'X' : operator.mul,
-                    'divided by' : operator.__truediv__,
+                    '+': operator.add,
+                    '-': operator.sub,
+                    'X': operator.mul,
+                    'divided by': operator.__truediv__,
                 }[op]
+
             def eval_binary_expr(op1, oper, op2):
-                op1,op2 = int(op1), int(op2)
+                op1, op2 = int(op1), int(op2)
                 return get_operator_fn(oper)(op1, op2)
             speak("your result is")
             print(eval_binary_expr(*(my_string.split())))
@@ -450,12 +479,10 @@ if __name__ == "__main__":
             stream.download()
             speak("Your video has been successfully downloaded inside the folder")
 
-
         elif 'bye' in query or 'goodbye' in query:
             stop = "Hope u enjoyed my services. Goodbye!"
             speak(stop)
             exit()
-
 
         elif 'email' in query:
             speak('Who is the recipient')
