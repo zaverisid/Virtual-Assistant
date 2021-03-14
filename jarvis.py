@@ -7,21 +7,16 @@ import wikipedia
 import wolframalpha
 import webbrowser
 import os
-import sys
-import random
-import math
 import smtplib
 import operator
 from twilio.rest import Client
 import cv2
 import wmi
-import tkinter as tk
 import pywhatkit
 import pyjokes
 import pyautogui
 import requests
 import numpy as np
-import subprocess
 import randfacts
 import speedtest
 import PyPDF2
@@ -215,6 +210,16 @@ if __name__ == "__main__":
             x = randfacts.getFact()
             print(x)
             speak("Did you know that, " + x)
+
+        elif 'alarm' in query:
+            speak("Sir, please tell me the time to set alarm. For example, set alarm to 6:30 pm")
+            tt = takeCommand()
+            tt = tt.replace("Set alarm to", "")
+            tt = tt.replace(".", "")
+            tt = tt.upper()
+            import MyAlarm
+            MyAlarm.alarm(tt)
+
 
         elif 'speed test' in query:
             st = speedtest.Speedtest()
