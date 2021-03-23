@@ -1,5 +1,6 @@
 import datetime
 import winsound
+from playsound import playsound
 
 def alarm(Timing):
     altime = str(datetime.datetime.now().strptime(Timing,"%I:%M %p"))
@@ -17,7 +18,7 @@ def alarm(Timing):
         if Horeal == datetime.datetime.now().hour:
             if Mireal == datetime.datetime.now().minute:
                 print("alarm is running")
-                winsound.PlaySound('abc', winsound.SND_LOOP)
+                playsound('alarm_tone.mp3', winsound.SND_LOOP)
 
             elif Mireal<datetime.datetime.now().minute:
                break

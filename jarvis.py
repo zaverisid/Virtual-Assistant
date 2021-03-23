@@ -22,6 +22,7 @@ import speedtest
 import PyPDF2
 import pytube
 import psutil
+from playsound import playsound
 from pywikihow import exceptions, search_wikihow
 from bs4 import BeautifulSoup
 # from PyQt5 import QtWidgets, QtCore, QtGui
@@ -131,7 +132,8 @@ def battery():
         speak(
             "Sir, we might not have sufficient power to work. Please connect your charger")
     elif battery < 15:
-        speak("Sir, the system will shut down soon. Kindly connect the charger immidiately")
+        playsound('ironman_backup_power.mp3')
+        # speak("Sir, the system will shut down soon. Kindly connect the charger immidiately")
 
 
 if __name__ == "__main__":
@@ -153,6 +155,14 @@ if __name__ == "__main__":
             chrome_path = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s'
             webbrowser.get(chrome_path).open(url)
 
+        elif 'youtube search' in query:
+            speak("What do you want me to search for?")
+            search = takeCommand()
+            url = 'https://youtube.com/results?search_query=' + search
+            chrome_path = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s'
+            webbrowser.get(chrome_path).open(url)
+            speak("Here is your result")
+
         elif 'open google' in query:
             url = "google.com"
             chrome_path = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s'
@@ -160,6 +170,12 @@ if __name__ == "__main__":
             speak("Sir, what should i search on google?")
             cm = takeCommand().lower()
             webbrowser.open(f"you searched {cm}")
+
+        elif 'google search' in query:
+            speak("What do you want me to search?")
+            find = takeCommand()
+            pywhatkit.search(find)
+            speak("Here is your result")
 
         elif 'open instagram' in query:
             url = "instagram.com"
