@@ -13,6 +13,7 @@ from twilio.rest import Client
 import cv2
 import wmi
 import pywhatkit
+import urllib.request
 import pyjokes
 import pyautogui
 import requests
@@ -113,6 +114,23 @@ def pdf_reader():
     text = page.extractText()
     speak(text)
 
+def st():
+    speak("Checking speed....")
+    speed = speedtest.Speedtest()
+    downloading = speed.download()
+    correctDown = int(downloading/800000)
+    uploading = speed.upload()
+    correctUpload = int(uploading/800000)
+
+    if 'uploading' in query:
+        speak(f"The uploading speed is {correctUpload} mbp s")
+
+    elif 'downloading' in query:
+        speak(f"The downloading speed is {correctDown} mbp s")
+        
+    else:
+        speak(f"The downloading speed is {correctDown} mbp s and the uploading speed is {correctUpload} mbp s")
+
 
 def cpu():
     cpu = str(psutil.cpu_percent())
@@ -124,14 +142,14 @@ def battery():
     battery = psutil.sensors_battery().percent
     print(battery)
     speak(f"We have {battery} percent of battery left")
-    if battery >= 75:
+    if battery >= 85:
         speak("Sir, We have enough battery to continue with our work")
-    elif battery >= 40 and battery < 75:
+    elif battery >= 50 and battery < 85:
         speak("Sir, we have a considerable amont of battery to continue working")
-    elif battery >= 15 and battery < 40:
+    elif battery >= 20 and battery < 50:
         speak(
             "Sir, we might not have sufficient power to work. Please connect your charger")
-    elif battery < 15:
+    elif battery < 20:
         playsound('ironman_backup_power.mp3')
         # speak("Sir, the system will shut down soon. Kindly connect the charger immidiately")
 
@@ -236,18 +254,24 @@ if __name__ == "__main__":
             import MyAlarm
             MyAlarm.alarm(tt)
 
+        elif 'open mobile camera' in query:
+            speak("Opening mobile camera.....")
+            speak("Press q to exit")
+            URL = 'http://192.168.243.118:8080/shot.jpg'
+            while True:
+                img_arr = np.array(bytearray(urllib.request.urlopen(URL).read()), dtype=np.uint8)
+                img = cv2.imdecode(img_arr,-1)
+                cv2.imshow('IPWebcam', img)
+                q = cv2.waitKey(1)
+                if q == ord("q"):
+                    break
+                img.release()
 
-        elif 'speed test' in query:
-            st = speedtest.Speedtest()
-            dl = speedtest.download()
-            up = speedtest.upload()
-            speak(
-                f"Sir we have {dl} bit per second downloading speed and {up} bits per second uploading speed")
-            # try:
-            #     os.system('cmd /k "speedtest"')
+                cv2.destroyAllWindows
 
-            # except:
-            #     speak("Sir, there is no internet connection")
+
+        elif 'speed test' in query or 'internet speed' in query or 'downloading speed' in query or 'uploading speed' in query:
+            st()
 
         elif 'take a note' in query or 'write' in query or 'note' in query:
             speak("What should i write sir?")
