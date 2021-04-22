@@ -39,7 +39,7 @@ MASTER = 'Sid'
 
 engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
-print(voices)
+# print(voices)
 engine.setProperty('voice', voices[0].id)
 # engine.setProperty('rate', 180)
 
@@ -63,7 +63,11 @@ def wishMe():
     else:
         speak("Good Evening!" + MASTER)
 
-    speak("How may i help You?")
+    speak("How may I help you?")
+
+def TaskExe():
+    speak("Hello Sir, This is jarvis")
+    speak("How may I help you?")
 
 
 def takeCommand():
@@ -413,6 +417,10 @@ if __name__ == "__main__":
         elif 'Whats up?' in query:
             wu = "Just doing my thing sir!"
             speak(wu)
+
+        elif 'you need a break' in query:
+            speak("Okay sir, you can call me anythime")
+            break
 
         elif 'instagram profile' in query or 'profile on instagram' in query:
             speak("Sir please enter the username correctly")
